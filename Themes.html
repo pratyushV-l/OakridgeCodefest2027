@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -7,753 +7,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --bg:#07111f;
-    --bg-2:#0b1426;
-    --surface:rgba(13,20,35,0.76);
-    --surface-strong:rgba(18,27,46,0.98);
-    --border:rgba(170,193,255,0.14);
-    --border-strong:rgba(130,230,211,0.24);
-    --text:#eef3ff;
-    --muted:#a8b3ce;
-    --muted-2:#8090b0;
-    --teal:#7fe0cf;
-    --blue:#7ca8ff;
-    --violet:#cf9cff;
-    --gold:#ffd38c;
-    --mono:'JetBrains Mono', monospace;
-    --display:'Space Grotesk', sans-serif;
-    --body:'Inter', sans-serif;
-  }
-
-  *{box-sizing:border-box;margin:0;padding:0;}
-  html{scroll-behavior:smooth;}
-  body{
-    min-height:100vh;
-    overflow-x:hidden;
-    background:
-      radial-gradient(900px 540px at 18% 0%, rgba(124,168,255,0.22), transparent 58%),
-      radial-gradient(760px 520px at 86% 14%, rgba(127,224,207,0.14), transparent 60%),
-      linear-gradient(180deg, #050a13 0%, var(--bg) 38%, #08111d 100%);
-    color:var(--text);
-    font-family:var(--body);
-    line-height:1.5;
-  }
-  a{color:inherit;text-decoration:none;}
-  button{font:inherit;}
-  ::selection{background:rgba(127,224,207,0.26);color:var(--text);}
-  .wrap{max-width:1240px;margin:0 auto;padding:0 28px;}
-  @media (max-width:720px){.wrap{padding:0 18px;}}
-
-  .bg-grid,
-  .bg-grid-2{
-    position:fixed;
-    inset:0;
-    pointer-events:none;
-    z-index:0;
-    background-image:
-      linear-gradient(rgba(162,185,255,0.06) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(162,185,255,0.06) 1px, transparent 1px);
-    background-size:60px 60px;
-    mask-image:radial-gradient(ellipse 72% 62% at 50% 20%, black 44%, transparent 90%);
-  }
-  .bg-grid-2{opacity:0.58;transform:translateY(10px);}
-  .bg-noise{
-    position:fixed;
-    inset:0;
-    z-index:1;
-    pointer-events:none;
-    opacity:0.34;
-    background:
-      radial-gradient(ellipse 45% 35% at 12% 0%, rgba(124,168,255,0.08), transparent 60%),
-      radial-gradient(ellipse 40% 30% at 88% 12%, rgba(127,224,207,0.08), transparent 58%);
-  }
-  .cursor-glow{
-    position:fixed;
-    left:0;
-    top:0;
-    width:360px;
-    height:360px;
-    pointer-events:none;
-    z-index:2;
-    transform:translate(-50%,-50%);
-    border-radius:50%;
-    background:radial-gradient(circle, rgba(127,224,207,0.22) 0%, rgba(124,168,255,0.12) 35%, rgba(207,156,255,0.05) 60%, transparent 76%);
-    filter:blur(10px);
-    mix-blend-mode:screen;
-    opacity:0.85;
-  }
-
-  .topbar-wrap{
-    position:fixed;
-    left:50%;
-    top:18px;
-    transform:translateX(-50%);
-    width:100%;
-    z-index:20;
-    display:flex;
-    justify-content:center;
-    pointer-events:none;
-  }
-  .island{
-    pointer-events:auto;
-    display:flex;
-    align-items:center;
-    gap:0;
-    background:rgba(12,18,30,0.78);
-    backdrop-filter:blur(18px);
-    border:1px solid rgba(170,193,255,0.14);
-    border-radius:999px;
-    padding:13px 22px;
-    box-shadow:0 20px 40px rgba(0,0,0,0.3);
-    transition:gap .38s cubic-bezier(.2,.8,.2,1), padding .38s cubic-bezier(.2,.8,.2,1), border-color .25s ease, transform .25s ease, box-shadow .25s ease;
-    cursor:pointer;
-  }
-  .island:hover,
-  .island.expanded{
-    gap:24px;
-    padding:13px 18px 13px 22px;
-    border-color:rgba(127,224,207,0.3);
-    box-shadow:0 22px 50px rgba(0,0,0,0.36);
-  }
-  .brand{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    font-family:var(--mono);
-    font-size:13px;
-    font-weight:700;
-    letter-spacing:0.1em;
-    text-transform:uppercase;
-    white-space:nowrap;
-  }
-  .brand .dot{
-    width:8px;height:8px;border-radius:50%;
-    background:var(--violet);
-    box-shadow:0 0 16px rgba(207,156,255,0.55);
-  }
-  .links{
-    display:flex;
-    gap:18px;
-    align-items:center;
-    max-width:0;
-    opacity:0;
-    overflow:hidden;
-    white-space:nowrap;
-    transition:max-width .45s cubic-bezier(.2,.8,.2,1), opacity .25s ease;
-    font-family:var(--mono);
-    font-size:12px;
-    text-transform:uppercase;
-    letter-spacing:0.1em;
-    color:var(--muted);
-  }
-  .island:hover .links,
-  .island.expanded .links{max-width:500px;opacity:1;}
-  .links a{transition:color .18s ease, transform .18s ease;}
-  .links a:hover,
-  .links a.active{color:var(--teal);transform:translateY(-1px);}
-  .cta{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    border-radius:999px;
-    padding:9px 16px;
-    border:1px solid rgba(127,224,207,0.34);
-    color:var(--text);
-    background:linear-gradient(180deg, rgba(127,224,207,0.1), rgba(124,168,255,0.08));
-    font-family:var(--mono);
-    font-size:12px;
-    text-transform:uppercase;
-    letter-spacing:0.1em;
-    max-width:0;
-    opacity:0;
-    overflow:hidden;
-    white-space:nowrap;
-    transition:max-width .45s cubic-bezier(.2,.8,.2,1), opacity .3s ease, background .2s ease, border-color .2s ease, color .2s ease, transform .2s ease;
-  }
-  .island:hover .cta,
-  .island.expanded .cta{max-width:190px;opacity:1;}
-  .cta:hover{border-color:rgba(127,224,207,0.55);color:var(--teal);transform:translateY(-1px);}
-
-  .page-hero{position:relative;z-index:5;padding:190px 0 64px;}
-  .hero-shell{
-    display:grid;
-    grid-template-columns:minmax(0,1.15fr) minmax(320px,0.85fr);
-    gap:26px;
-    align-items:stretch;
-  }
-  @media (max-width:960px){.hero-shell{grid-template-columns:1fr;}}
-  .hero-copy,
-  .hero-panel,
-  .section-panel,
-  .details-panel,
-  .contact-panel{
-    background:var(--surface);
-    border:1px solid var(--border);
-    backdrop-filter:blur(16px);
-    box-shadow:0 24px 52px rgba(0,0,0,0.24);
-  }
-  .hero-copy{
-    position:relative;
-    overflow:hidden;
-    border-radius:30px;
-    padding:42px 42px 38px;
-    min-height:430px;
-  }
-  .hero-copy::before{
-    content:'';
-    position:absolute;
-    inset:-1px;
-    background:
-      radial-gradient(circle at top right, rgba(124,168,255,0.18), transparent 42%),
-      radial-gradient(circle at 18% 18%, rgba(207,156,255,0.13), transparent 28%),
-      radial-gradient(circle at bottom left, rgba(127,224,207,0.16), transparent 38%);
-    pointer-events:none;
-  }
-  .hero-copy::after{
-    content:'';
-    position:absolute;
-    right:-70px;
-    bottom:-90px;
-    width:240px;
-    height:240px;
-    border-radius:50%;
-    background:radial-gradient(circle, rgba(127,224,207,0.12), rgba(124,168,255,0.08) 42%, transparent 72%);
-    filter:blur(2px);
-    pointer-events:none;
-  }
-  .eyebrow{
-    position:relative;
-    z-index:1;
-    display:inline-flex;
-    align-items:center;
-    gap:10px;
-    margin-bottom:16px;
-    font-family:var(--mono);
-    font-size:11px;
-    letter-spacing:0.18em;
-    text-transform:uppercase;
-    color:var(--teal);
-  }
-  .eyebrow::before{
-    content:'';
-    width:10px;
-    height:10px;
-    border-radius:50%;
-    background:var(--teal);
-    box-shadow:0 0 16px rgba(127,224,207,0.45);
-  }
-  h1{
-    position:relative;
-    z-index:1;
-    max-width:12ch;
-    font-family:var(--display);
-    font-size:clamp(40px,6vw,72px);
-    line-height:0.95;
-    letter-spacing:-0.055em;
-  }
-  .accent{
-    background:linear-gradient(90deg, var(--teal), var(--blue) 55%, var(--violet));
-    -webkit-background-clip:text;
-    background-clip:text;
-    color:transparent;
-  }
-  .page-sub,
-  .page-note{position:relative;z-index:1;}
-  .page-sub{
-    margin-top:18px;
-    max-width:66ch;
-    color:var(--muted);
-    font-size:16px;
-  }
-  .hero-signals{
-    position:relative;
-    z-index:1;
-    display:grid;
-    grid-template-columns:repeat(3,minmax(0,1fr));
-    gap:12px;
-    margin-top:24px;
-  }
-  @media (max-width:640px){.hero-signals{grid-template-columns:1fr;}}
-  .signal-card{
-    border-radius:20px;
-    padding:16px 15px;
-    background:linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.03));
-    border:1px solid rgba(255,255,255,0.08);
-  }
-  .signal-card .kicker{
-    display:block;
-    font-family:var(--mono);
-    font-size:10px;
-    letter-spacing:0.16em;
-    text-transform:uppercase;
-    color:var(--muted-2);
-  }
-  .signal-card strong{
-    display:block;
-    margin-top:8px;
-    font-family:var(--display);
-    font-size:18px;
-    line-height:1.05;
-    letter-spacing:-0.03em;
-  }
-  .signal-card:nth-child(1) strong{color:var(--teal);}
-  .signal-card:nth-child(2) strong{color:var(--blue);}
-  .signal-card:nth-child(3) strong{color:var(--violet);}
-  .page-note{
-    margin-top:20px;
-    padding-left:14px;
-    border-left:2px solid rgba(207,156,255,0.7);
-    color:var(--muted);
-    font-family:var(--mono);
-    font-size:12px;
-    line-height:1.7;
-  }
-  .hero-panel{
-    border-radius:30px;
-    padding:26px;
-    display:flex;
-    flex-direction:column;
-    gap:16px;
-    background:
-      radial-gradient(circle at top left, rgba(127,224,207,0.12), transparent 30%),
-      radial-gradient(circle at top right, rgba(124,168,255,0.1), transparent 28%),
-      linear-gradient(180deg, rgba(13,20,35,0.84), rgba(10,16,28,0.82));
-  }
-  .hero-panel-head{
-    display:flex;
-    justify-content:space-between;
-    gap:14px;
-    align-items:flex-start;
-  }
-  .hero-panel h2,
-  .section-title h2,
-  .floating-head h3,
-  .contact-panel h3{font-family:var(--display);letter-spacing:-0.04em;}
-  .hero-panel h2{font-size:26px;}
-  .hero-panel p{color:var(--muted);font-size:13px;max-width:28ch;}
-  .pill{
-    display:inline-flex;
-    align-items:center;
-    gap:8px;
-    padding:9px 12px;
-    border-radius:999px;
-    border:1px solid rgba(255,255,255,0.08);
-    background:rgba(255,255,255,0.04);
-    color:var(--text);
-    font-family:var(--mono);
-    font-size:10px;
-    text-transform:uppercase;
-    letter-spacing:0.08em;
-  }
-  .pill::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--teal);box-shadow:0 0 10px rgba(127,224,207,0.35);}
-  .hero-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
-  .stat{
-    border-radius:20px;
-    padding:16px;
-    background:linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.03));
-    border:1px solid rgba(255,255,255,0.08);
-  }
-  .hero-stats .stat:nth-child(1){border-color:rgba(124,168,255,0.22);}
-  .hero-stats .stat:nth-child(2){border-color:rgba(127,224,207,0.22);}
-  .hero-stats .stat:nth-child(3){border-color:rgba(207,156,255,0.22);}
-  .hero-stats .stat:nth-child(4){border-color:rgba(255,211,140,0.18);}
-  .stat strong{display:block;font-family:var(--display);font-size:28px;line-height:1;}
-  .stat span{display:block;margin-top:8px;color:var(--muted);font-size:12px;}
-  .hero-note{
-    border-radius:20px;
-    padding:15px 16px;
-    background:linear-gradient(180deg, rgba(127,224,207,0.11), rgba(124,168,255,0.06));
-    border:1px solid rgba(127,224,207,0.16);
-    color:var(--muted);
-    font-size:13px;
-  }
-  .hero-note strong{color:var(--text);}
-
-  .themes-section{position:relative;z-index:5;padding:18px 0 58px;}
-  .section-panel{
-    border-radius:28px;
-    padding:26px;
-  }
-  .section-title{
-    display:flex;
-    align-items:flex-end;
-    justify-content:space-between;
-    gap:20px;
-  }
-  .section-title .pill{background:linear-gradient(180deg, rgba(127,224,207,0.12), rgba(124,168,255,0.08));}
-  .section-title p{
-    margin-top:8px;
-    max-width:66ch;
-    color:var(--muted);
-    font-size:14px;
-  }
-  .toolbar{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px;}
-  .filter-chip{
-    border:none;
-    cursor:pointer;
-    display:inline-flex;
-    align-items:center;
-    gap:8px;
-    border-radius:999px;
-    padding:10px 15px;
-    background:rgba(255,255,255,0.03);
-    border:1px solid rgba(255,255,255,0.08);
-    color:var(--muted);
-    font-family:var(--mono);
-    font-size:11px;
-    text-transform:uppercase;
-    letter-spacing:0.1em;
-    transition:transform .2s ease, border-color .2s ease, color .2s ease, background .2s ease;
-  }
-  .filter-chip::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--muted-2);transition:background .2s ease, box-shadow .2s ease;}
-  .filter-chip:hover{transform:translateY(-1px);color:var(--text);border-color:rgba(127,224,207,0.18);}
-  .filter-chip.active{color:var(--text);border-color:rgba(127,224,207,0.35);background:linear-gradient(180deg, rgba(127,224,207,0.1), rgba(124,168,255,0.07));}
-  .filter-chip.active::before{background:var(--teal);box-shadow:0 0 10px rgba(127,224,207,0.45);}
-
-  .themes-grid{
-    display:grid;
-    grid-template-columns:repeat(2,minmax(0,1fr));
-    gap:18px;
-    margin-top:22px;
-  }
-  @media (max-width:860px){.themes-grid{grid-template-columns:1fr;}}
-  .theme-card{
-    position:relative;
-    border-radius:26px;
-    min-height:290px;
-    padding:24px;
-    overflow:hidden;
-    background:rgba(17,24,40,0.88);
-    border:1px solid rgba(255,255,255,0.08);
-    display:flex;
-    flex-direction:column;
-    justify-content:space-between;
-    transform:translateZ(0);
-    transition:transform .28s ease, box-shadow .28s ease, border-color .28s ease, opacity .22s ease;
-    cursor:pointer;
-  }
-  .theme-card::before{
-    content:'';
-    position:absolute;
-    inset:0;
-    background:
-      radial-gradient(circle at top right, rgba(255,255,255,0.05), transparent 26%),
-      radial-gradient(circle at 15% 15%, var(--card-glow, rgba(124,168,255,0.14)), transparent 42%),
-      linear-gradient(135deg, rgba(255,255,255,0.02), transparent 50%);
-    opacity:0.95;
-    pointer-events:none;
-  }
-  .theme-card::after{
-    content:'';
-    position:absolute;
-    inset:auto -18% -24% auto;
-    width:240px;
-    height:240px;
-    border-radius:50%;
-    background:radial-gradient(circle, rgba(255,255,255,0.07), transparent 68%);
-    pointer-events:none;
-    filter:blur(2px);
-  }
-  .theme-card:hover{
-    transform:translateY(-10px) scale(1.01);
-    border-color:var(--card-edge, rgba(127,224,207,0.24));
-    box-shadow:0 28px 58px rgba(0,0,0,0.34);
-  }
-  .theme-card:hover .card-compact{opacity:1;}
-  .theme-card.is-active{
-    position:relative;
-    z-index:15;
-    transform:translateY(-8px) scale(1.02);
-    border-color:var(--card-edge, rgba(127,224,207,0.3));
-    box-shadow:0 32px 70px rgba(0,0,0,0.4);
-  }
-  .theme-card.is-faded{opacity:0.45;}
-  .theme-top{
-    position:relative;
-    z-index:1;
-    display:flex;
-    justify-content:space-between;
-    gap:14px;
-    align-items:flex-start;
-  }
-  .theme-index{
-    font-family:var(--mono);
-    color:var(--muted);
-    font-size:12px;
-    letter-spacing:0.12em;
-  }
-  .tag{
-    display:inline-flex;
-    align-items:center;
-    gap:8px;
-    padding:8px 11px;
-    border-radius:999px;
-    background:rgba(255,255,255,0.04);
-    border:1px solid rgba(255,255,255,0.08);
-    color:var(--text);
-    font-family:var(--mono);
-    font-size:10px;
-    text-transform:uppercase;
-    letter-spacing:0.08em;
-  }
-  .tag::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--teal);box-shadow:0 0 10px rgba(127,224,207,0.35);}
-  .theme-name{
-    position:relative;
-    z-index:1;
-    margin-top:12px;
-    font-family:var(--display);
-    font-size:26px;
-    line-height:1.02;
-    letter-spacing:-0.04em;
-  }
-  .theme-desc{
-    position:relative;
-    z-index:1;
-    margin-top:10px;
-    max-width:54ch;
-    color:var(--muted);
-    font-size:14px;
-  }
-  .theme-meta{
-    position:relative;
-    z-index:1;
-    display:flex;
-    flex-wrap:wrap;
-    gap:8px;
-    margin-top:15px;
-  }
-  .meta-pill{
-    padding:8px 10px;
-    border-radius:999px;
-    background:rgba(255,255,255,0.04);
-    border:1px solid rgba(255,255,255,0.08);
-    color:var(--muted);
-    font-size:12px;
-  }
-  .card-compact{
-    position:relative;
-    z-index:1;
-    display:grid;
-    gap:8px;
-    margin-top:16px;
-    padding-top:14px;
-    border-top:1px solid rgba(255,255,255,0.08);
-    max-height:0;
-    opacity:0;
-    overflow:hidden;
-    transition:max-height .35s ease, opacity .25s ease, margin-top .35s ease, padding-top .35s ease;
-  }
-  .theme-card:hover .card-compact{max-height:130px;opacity:1;}
-  .card-compact .lbl{
-    color:var(--teal);
-    font-family:var(--mono);
-    font-size:10px;
-    text-transform:uppercase;
-    letter-spacing:0.16em;
-  }
-  .card-compact ul{list-style:none;display:grid;gap:8px;}
-  .card-compact li{
-    position:relative;
-    padding-left:16px;
-    color:var(--text);
-    font-size:13px;
-  }
-  .card-compact li::before{content:'›';position:absolute;left:0;color:var(--teal);}
-  .card-foot{
-    position:relative;
-    z-index:1;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:12px;
-    margin-top:18px;
-  }
-  .audience-tag,
-  .link-tag{
-    display:inline-flex;
-    align-items:center;
-    gap:8px;
-    padding:8px 10px;
-    border-radius:999px;
-    font-family:var(--mono);
-    font-size:10px;
-    text-transform:uppercase;
-    letter-spacing:0.14em;
-    border:1px solid rgba(255,255,255,0.08);
-    background:rgba(255,255,255,0.04);
-  }
-  .audience-tag{color:var(--text);}
-  .audience-tag.junior{color:#e8f5ff;border-color:rgba(127,224,207,0.18);background:rgba(127,224,207,0.08);}
-  .link-tag{color:var(--teal);border-color:rgba(127,224,207,0.16);}
-  .theme-card[data-theme="cybersecurity"]{--card-glow:rgba(124,168,255,0.16);--card-edge:rgba(124,168,255,0.3);}
-  .theme-card[data-theme="healthtech"]{--card-glow:rgba(127,224,207,0.16);--card-edge:rgba(127,224,207,0.3);}
-  .theme-card[data-theme="climate"]{--card-glow:rgba(141,224,170,0.14);--card-edge:rgba(141,224,170,0.28);}
-  .theme-card[data-theme="robotics"]{--card-glow:rgba(207,156,255,0.14);--card-edge:rgba(207,156,255,0.28);}
-  .theme-card[data-theme="accessibility"]{--card-glow:rgba(255,211,140,0.14);--card-edge:rgba(255,211,140,0.28);}
-  .theme-card[data-theme="game"]{--card-glow:rgba(124,168,255,0.16);--card-edge:rgba(124,168,255,0.3);}
-
-  .details-float{
-    position:fixed;
-    inset:0;
-    z-index:40;
-    display:none;
-    align-items:center;
-    justify-content:center;
-    padding:28px;
-    background:rgba(3,8,16,0.42);
-    backdrop-filter:blur(10px);
-  }
-  .details-float.open{display:flex;}
-  .details-panel{
-    width:min(880px,100%);
-    max-height:min(88vh,920px);
-    overflow:auto;
-    border-radius:30px;
-    padding:26px;
-    position:relative;
-    background:linear-gradient(180deg, rgba(16,24,40,0.98), rgba(11,17,30,0.98));
-    border:1px solid rgba(127,224,207,0.18);
-    box-shadow:0 36px 90px rgba(0,0,0,0.48);
-  }
-  .details-close{
-    position:absolute;
-    top:16px;
-    right:16px;
-    width:40px;
-    height:40px;
-    display:grid;
-    place-items:center;
-    border-radius:999px;
-    border:1px solid rgba(255,255,255,0.08);
-    background:rgba(255,255,255,0.05);
-    color:var(--text);
-    cursor:pointer;
-    transition:transform .18s ease, border-color .18s ease, color .18s ease, background .18s ease;
-  }
-  .details-close:hover{transform:scale(1.04);color:var(--teal);border-color:rgba(127,224,207,0.35);background:rgba(127,224,207,0.08);}
-  .details-head{padding-right:60px;}
-  .details-kicker{
-    font-family:var(--mono);
-    font-size:10px;
-    text-transform:uppercase;
-    letter-spacing:0.18em;
-    color:var(--teal);
-  }
-  .details-title{
-    margin-top:10px;
-    font-family:var(--display);
-    font-size:clamp(28px,4vw,44px);
-    letter-spacing:-0.05em;
-    line-height:1;
-  }
-  .details-grid{
-    display:grid;
-    grid-template-columns:minmax(0,1.1fr) minmax(240px,0.9fr);
-    gap:18px;
-    margin-top:20px;
-  }
-  @media (max-width:820px){.details-grid{grid-template-columns:1fr;}}
-  .details-summary,
-  .details-box{border-radius:22px;padding:18px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);}
-  .details-summary p{color:var(--muted);font-size:14px;}
-  .details-list{margin-top:14px;display:grid;gap:10px;}
-  .details-row{padding:12px 0;border-top:1px solid rgba(255,255,255,0.08);display:flex;justify-content:space-between;gap:16px;align-items:flex-start;}
-  .details-row:first-child{border-top:none;padding-top:0;}
-  .details-row .label{color:var(--muted-2);font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:0.14em;}
-  .details-row .value{color:var(--text);font-size:14px;text-align:right;max-width:30ch;}
-  .details-box h4{font-family:var(--display);font-size:18px;letter-spacing:-0.03em;}
-  .details-box ul{list-style:none;display:grid;gap:10px;margin-top:12px;}
-  .details-box li{position:relative;padding-left:16px;color:var(--text);font-size:14px;}
-  .details-box li::before{content:'›';position:absolute;left:0;color:var(--teal);}
-  .details-badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;}
-  .details-badges .meta-pill{color:var(--text);}
-  .details-panel[data-theme="cybersecurity"]{--details-accent:var(--blue);}
-  .details-panel[data-theme="healthtech"]{--details-accent:var(--teal);}
-  .details-panel[data-theme="climate"]{--details-accent:#8de0aa;}
-  .details-panel[data-theme="robotics"]{--details-accent:var(--violet);}
-  .details-panel[data-theme="accessibility"]{--details-accent:var(--gold);}
-  .details-panel[data-theme="game"]{--details-accent:var(--blue);}
-  .details-panel .details-kicker,
-  .details-panel .details-box li::before,
-  .details-panel .details-badges .meta-pill{color:var(--details-accent);}
-
-  .info-strip{padding:10px 0 20px;position:relative;z-index:5;}
-  .info-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;}
-  @media (max-width:960px){.info-grid{grid-template-columns:1fr;}}
-  .info-card{
-    border-radius:22px;
-    padding:18px;
-    background:linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.025));
-    border:1px solid rgba(255,255,255,0.08);
-  }
-  .info-card .kicker{
-    font-family:var(--mono);
-    font-size:10px;
-    text-transform:uppercase;
-    letter-spacing:0.16em;
-    color:var(--teal);
-  }
-  .info-card h3{margin-top:10px;font-family:var(--display);font-size:22px;letter-spacing:-0.03em;}
-  .info-card p{margin-top:8px;color:var(--muted);font-size:14px;}
-
-  .contact{padding:18px 0 72px;position:relative;z-index:5;}
-  .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
-  @media (max-width:960px){.contact-grid{grid-template-columns:1fr;}}
-  .contact-panel{border-radius:26px;padding:22px;}
-  .contact-panel:first-child{background:linear-gradient(180deg, rgba(127,224,207,0.08), rgba(13,20,35,0.82));}
-  .contact-panel:last-child{background:linear-gradient(180deg, rgba(124,168,255,0.08), rgba(13,20,35,0.82));}
-  .contact-panel h3{font-size:28px;}
-  .contact-panel p{margin-top:10px;color:var(--muted);font-size:14px;}
-  .contact-list{margin-top:18px;display:grid;gap:12px;}
-  .contact-row{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:16px;
-    padding:14px 16px;
-    border-radius:20px;
-    background:rgba(255,255,255,0.03);
-    border:1px solid rgba(255,255,255,0.08);
-  }
-  .contact-row .label{display:block;font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:0.14em;color:var(--muted-2);}
-  .contact-row .value{display:block;margin-top:4px;font-size:14px;color:var(--text);}
-  .contact-row a.value{color:var(--teal);}
-
-  .footer{position:relative;z-index:5;padding:20px 0 40px;}
-  .footer-inner{
-    display:flex;
-    justify-content:space-between;
-    flex-wrap:wrap;
-    gap:14px;
-    border-top:1px solid rgba(255,255,255,0.08);
-    padding-top:18px;
-    color:var(--muted-2);
-    font-family:var(--mono);
-    font-size:11px;
-    text-transform:uppercase;
-    letter-spacing:0.08em;
-  }
-
-  .hidden{display:none !important;}
-
-  @keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
-  .hero-copy,
-  .hero-panel,
-  .section-panel,
-  .contact-panel{animation:fadeUp .7s ease both;}
-  .hero-panel{animation-delay:.06s;}
-  .section-panel{animation-delay:.1s;}
-
-  @media (prefers-reduced-motion: reduce){
-    html{scroll-behavior:auto;}
-    *,*::before,*::after{animation:none !important;transition:none !important;}
-    .cursor-glow{display:none;}
-  }
-</style>
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <div class="bg-logo"></div>
+  <div class="bg-logo"></div>
+<div class="bg-shark-glow"></div>
   <div class="bg-grid"></div>
   <div class="bg-grid-2"></div>
   <div class="bg-noise"></div>
@@ -761,11 +20,12 @@
 
   <div class="topbar-wrap">
     <div class="island" id="islandNav">
-      <div class="brand"><span class="dot"></span>CODEFEST_10</div>
+      <a class="brand" href="Themes.html"><span class="dot"></span>CODEFEST_10</a>
       <div class="links">
-        <a href="index.html">home</a>
-        <a href="#themes">themes</a>
-        <a href="contact.html">contact</a>
+        <a class="active" href="Themes.html">themes</a>
+        <a href="EventDetails.html#schedule">schedule</a>
+        <a href="Resources.html">resources</a>
+        <a href="EventDetails.html#contact">contact</a>
       </div>
     </div>
   </div>
@@ -773,28 +33,10 @@
   <section class="page-hero" id="overview">
     <div class="wrap hero-shell">
       <div class="hero-copy">
-        <div class="eyebrow">10th Edition — Problem Statements</div>
-        <h1>Pick a track. Build <span class="accent">something that matters.</span></h1>
-        <p class="page-sub">Every team selects one primary theme and can combine ideas if it strengthens the final product. The page should feel clean, formal, and easy to use while still keeping the original Codefest motion.</p>
-        <div class="page-note">Hover a card to see example directions. Click a card to open a floating detail view. Use the senior and junior filters to narrow the selection.</div>
+        <div class="eyebrow">Codefest 10th Edition</div>
+        <h1>Our <span class="accent">Themes</span></h1>
+        <p class="page-sub">Each team will select one primary theme to focus on during the competition, as well as a secondary theme to help guide their project. This year we have 6 amazing themes to choose from.</p>
       </div>
-
-      <aside class="hero-panel">
-        <div class="hero-panel-head">
-          <div>
-            <h2>Theme guide</h2>
-            <p>A concise summary so teams can scan the page quickly and move into building.</p>
-          </div>
-          <span class="pill">Official tracks</span>
-        </div>
-        <div class="hero-stats">
-          <div class="stat"><strong>06</strong><span>theme tracks available</span></div>
-          <div class="stat"><strong>24h</strong><span>event build window</span></div>
-          <div class="stat"><strong>Jr</strong><span>game development is junior-only</span></div>
-          <div class="stat"><strong>All</strong><span>other themes are open to juniors</span></div>
-        </div>
-        <div class="hero-note"><strong>Note:</strong> The goal is a sharp, polished concept that can be explained fast and shown clearly in demo form.</div>
-      </aside>
     </div>
   </section>
 
@@ -803,176 +45,163 @@
       <div class="section-title">
         <div>
           <h2>Theme selection</h2>
-          <p>Choose a filter, then click a theme for the full description. The active card floats above the rest while the detail sheet opens on top with a close button.</p>
+          <p>Click a theme for the full description.</p>
         </div>
-        <span class="pill">Last year inspired</span>
-      </div>
-
-      <div class="toolbar" aria-label="Theme filters">
-        <button class="filter-chip active" type="button" data-filter="all">All tracks</button>
-        <button class="filter-chip" type="button" data-filter="senior">Senior only</button>
-        <button class="filter-chip" type="button" data-filter="junior">Junior only</button>
       </div>
 
       <div class="themes-grid" id="themesGrid">
-        <article class="theme-card" tabindex="0" role="button" aria-label="Open Cybersecurity theme" data-theme="cybersecurity" data-tags="senior junior all">
+        <article class="theme-card" tabindex="0" role="button" aria-label="Open Theme 1" data-theme="cybersecurity" data-tags="senior junior all">
           <div>
             <div class="theme-top">
               <div class="theme-index">01</div>
-              <span class="tag">Cybersecurity</span>
             </div>
-            <h3 class="theme-name">Cybersecurity</h3>
-            <p class="theme-desc">Protect systems, data, and users from digital threats with a solution that feels secure without becoming hard to use.</p>
+            <h3 class="theme-name">Theme 1</h3>
+            <p class="theme-desc">Description for theme 1 placeholder content goes here.</p>
             <div class="theme-meta">
-              <span class="meta-pill">Threat detection</span>
-              <span class="meta-pill">Secure sharing</span>
-              <span class="meta-pill">Privacy tools</span>
+              <span class="meta-pill">Placeholder tag</span>
+              <span class="meta-pill">Placeholder tag</span>
+              <span class="meta-pill">Placeholder tag</span>
             </div>
             <div class="card-compact">
               <div class="lbl">Example directions</div>
               <ul>
-                <li>AI-assisted phishing and threat detector</li>
-                <li>Secure student file-sharing dashboard</li>
+                <li>Placeholder idea one</li>
+                <li>Placeholder idea two</li>
               </ul>
             </div>
           </div>
           <div class="card-foot">
-            <span class="audience-tag">Senior / Junior</span>
+            <span class="audience-tag">Placeholder</span>
             <span class="link-tag">Click for details</span>
           </div>
         </article>
 
-        <article class="theme-card" tabindex="0" role="button" aria-label="Open HealthTech and Digital Wellbeing theme" data-theme="healthtech" data-tags="senior junior all">
+        <article class="theme-card" tabindex="0" role="button" aria-label="Open Theme 2" data-theme="healthtech" data-tags="senior junior all">
           <div>
             <div class="theme-top">
               <div class="theme-index">02</div>
-              <span class="tag">HealthTech</span>
             </div>
-            <h3 class="theme-name">HealthTech &amp; Digital Wellbeing</h3>
-            <p class="theme-desc">Tech that supports physical health, mental wellness, and healthier digital habits without feeling clinical or intimidating.</p>
+            <h3 class="theme-name">Theme 2</h3>
+            <p class="theme-desc">Filler description for theme 2 placeholder content.</p>
             <div class="theme-meta">
-              <span class="meta-pill">Wellness tracking</span>
-              <span class="meta-pill">Habit support</span>
-              <span class="meta-pill">Student care</span>
+              <span class="meta-pill">Placeholder tag</span>
+              <span class="meta-pill">Placeholder tag</span>
+              <span class="meta-pill">Placeholder tag</span>
             </div>
             <div class="card-compact">
               <div class="lbl">Example directions</div>
               <ul>
-                <li>Daily wellbeing companion with reflective check-ins</li>
-                <li>Smart reminder system for healthy screen breaks</li>
+                <li>Placeholder idea one</li>
+                <li>Placeholder idea two</li>
               </ul>
             </div>
           </div>
           <div class="card-foot">
-            <span class="audience-tag">Senior / Junior</span>
+            <span class="audience-tag">Placeholder</span>
             <span class="link-tag">Click for details</span>
           </div>
         </article>
 
-        <article class="theme-card" tabindex="0" role="button" aria-label="Open Environmental Monitoring and Climate Tech theme" data-theme="climate" data-tags="senior junior all">
+        <article class="theme-card" tabindex="0" role="button" aria-label="Open Theme 3" data-theme="climate" data-tags="senior junior all">
           <div>
             <div class="theme-top">
               <div class="theme-index">03</div>
-              <span class="tag">Climate Tech</span>
             </div>
-            <h3 class="theme-name">Environmental Monitoring &amp; Climate Tech</h3>
-            <p class="theme-desc">Build tools that help people understand the environment better and make more sustainable choices through data and automation.</p>
+            <h3 class="theme-name">Theme 3</h3>
+            <p class="theme-desc">Filler description for theme 3 placeholder content.</p>
             <div class="theme-meta">
-              <span class="meta-pill">Air quality</span>
-              <span class="meta-pill">Climate data</span>
-              <span class="meta-pill">Resource tracking</span>
+              <span class="meta-pill">Placeholder tag</span>
+              <span class="meta-pill">Placeholder tag</span>
+              <span class="meta-pill">Placeholder tag</span>
             </div>
             <div class="card-compact">
               <div class="lbl">Example directions</div>
               <ul>
-                <li>Local pollution dashboard with weather overlays</li>
-                <li>Resource-saving planner for school campuses</li>
+                <li>Placeholder idea one</li>
+                <li>Placeholder idea two</li>
               </ul>
             </div>
           </div>
           <div class="card-foot">
-            <span class="audience-tag">Senior / Junior</span>
+            <span class="audience-tag">Placeholder</span>
             <span class="link-tag">Click for details</span>
           </div>
         </article>
 
-        <article class="theme-card" tabindex="0" role="button" aria-label="Open Robotics and Embedded Systems theme" data-theme="robotics" data-tags="senior junior all">
+        <article class="theme-card" tabindex="0" role="button" aria-label="Open Theme 4" data-theme="robotics" data-tags="senior junior all">
           <div>
             <div class="theme-top">
               <div class="theme-index">04</div>
-              <span class="tag">Robotics</span>
             </div>
-            <h3 class="theme-name">Robotics &amp; Embedded Systems</h3>
-            <p class="theme-desc">Connect hardware and software to create smart, responsive systems that react to the physical world around them.</p>
+            <h3 class="theme-name">Theme 4</h3>
+            <p class="theme-desc">Filler description for theme 4 placeholder content.</p>
             <div class="theme-meta">
-              <span class="meta-pill">Sensors</span>
-              <span class="meta-pill">Automation</span>
-              <span class="meta-pill">IoT systems</span>
+              <span class="meta-pill">Placeholder tag</span>
+              <span class="meta-pill">Placeholder tag</span>
+              <span class="meta-pill">Placeholder tag</span>
             </div>
             <div class="card-compact">
               <div class="lbl">Example directions</div>
               <ul>
-                <li>Sensor-based helper for classroom or lab safety</li>
-                <li>Smart automation dashboard for home or school</li>
+                <li>Placeholder idea one</li>
+                <li>Placeholder idea two</li>
               </ul>
             </div>
           </div>
           <div class="card-foot">
-            <span class="audience-tag">Senior / Junior</span>
+            <span class="audience-tag">Placeholder</span>
             <span class="link-tag">Click for details</span>
           </div>
         </article>
 
-        <article class="theme-card" tabindex="0" role="button" aria-label="Open Digital Accessibility and Assistive Technology theme" data-theme="accessibility" data-tags="senior junior all">
+        <article class="theme-card" tabindex="0" role="button" aria-label="Open Theme 5" data-theme="accessibility" data-tags="senior junior all">
           <div>
             <div class="theme-top">
               <div class="theme-index">05</div>
-              <span class="tag">Accessibility</span>
             </div>
-            <h3 class="theme-name">Digital Accessibility &amp; Assistive Technology</h3>
-            <p class="theme-desc">Inclusive technology that helps people with disabilities interact, learn, and participate more independently.</p>
+            <h3 class="theme-name">Theme 5</h3>
+            <p class="theme-desc">Filler description for theme 5 placeholder content.</p>
             <div class="theme-meta">
-              <span class="meta-pill">Inclusive UI</span>
-              <span class="meta-pill">Assistive tools</span>
-              <span class="meta-pill">Voice support</span>
+              <span class="meta-pill">Placeholder tag</span>
+              <span class="meta-pill">Placeholder tag</span>
+              <span class="meta-pill">Placeholder tag</span>
             </div>
             <div class="card-compact">
               <div class="lbl">Example directions</div>
               <ul>
-                <li>Accessibility-first navigation for low-vision users</li>
-                <li>Voice-guided study or campus assistant</li>
+                <li>Placeholder idea one</li>
+                <li>Placeholder idea two</li>
               </ul>
             </div>
           </div>
           <div class="card-foot">
-            <span class="audience-tag">Senior / Junior</span>
+            <span class="audience-tag">Placeholder</span>
             <span class="link-tag">Click for details</span>
           </div>
         </article>
 
-        <article class="theme-card" tabindex="0" role="button" aria-label="Open Game Development theme" data-theme="game" data-tags="junior all">
+        <article class="theme-card" tabindex="0" role="button" aria-label="Open Theme 6" data-theme="game" data-tags="junior all">
           <div>
             <div class="theme-top">
               <div class="theme-index">06</div>
-              <span class="tag">Junior Only</span>
             </div>
-            <h3 class="theme-name">Game Development</h3>
-            <p class="theme-desc">Build an interactive game with creative mechanics, strong gameplay, and a polished experience that feels complete.</p>
+            <h3 class="theme-name">Theme 6</h3>
+            <p class="theme-desc">Filler description for theme 6 placeholder content.</p>
             <div class="theme-meta">
-              <span class="meta-pill">Level design</span>
-              <span class="meta-pill">Puzzle games</span>
-              <span class="meta-pill">Arcade concepts</span>
+              <span class="meta-pill">Placeholder tag</span>
+              <span class="meta-pill">Placeholder tag</span>
+              <span class="meta-pill">Placeholder tag</span>
             </div>
             <div class="card-compact">
               <div class="lbl">Example directions</div>
               <ul>
-                <li>Short narrative puzzle game with a clear win state</li>
-                <li>Physics-based arcade prototype with simple controls</li>
+                <li>Placeholder idea one</li>
+                <li>Placeholder idea two</li>
               </ul>
             </div>
           </div>
           <div class="card-foot">
-            <span class="audience-tag junior">Junior only</span>
+            <span class="audience-tag junior">Placeholder</span>
             <span class="link-tag">Click for details</span>
           </div>
         </article>
@@ -988,16 +217,6 @@
           <h3>Pick a theme that gives your team a clear problem.</h3>
           <p>Strong projects usually solve one specific issue well instead of trying to do everything at once.</p>
         </div>
-        <div class="info-card">
-          <div class="kicker">Pitch quality</div>
-          <h3>Keep the idea demo-friendly.</h3>
-          <p>The best entries are easy to explain in one minute and easy to show in a live demo.</p>
-        </div>
-        <div class="info-card">
-          <div class="kicker">Visual polish</div>
-          <h3>Let the interface feel composed.</h3>
-          <p>Formal spacing, crisp labels, and soft motion make the page feel more credible and complete.</p>
-        </div>
       </div>
     </div>
   </section>
@@ -1006,21 +225,19 @@
     <div class="wrap contact-grid">
       <div class="contact-panel">
         <h3>Contact us</h3>
-        <p>If you need clarification on a theme, reach out before building. That saves time and keeps the project aligned with the event.</p>
+        <p>If you need clarification on a theme, reach out to us before deciding. </p>
         <div class="contact-list">
           <div class="contact-row">
             <div>
               <span class="label">Email</span>
               <a class="value" href="mailto:codefest@oakridge.in">codefest@oakridge.in</a>
             </div>
-            <span class="tag">Fastest response</span>
           </div>
           <div class="contact-row">
             <div>
               <span class="label">Website</span>
               <span class="value">codefest.oakridge.in</span>
             </div>
-            <span class="tag">Official site</span>
           </div>
         </div>
       </div>
@@ -1031,16 +248,14 @@
           <div class="contact-row">
             <div>
               <span class="label">Date</span>
-              <span class="value">7th - 8th Feb, 2026</span>
+              <span class="value">TBD</span>
             </div>
-            <span class="tag">Overnight</span>
           </div>
           <div class="contact-row">
             <div>
               <span class="label">Format</span>
               <span class="value">24-hour hackathon</span>
             </div>
-            <span class="tag">Theme page</span>
           </div>
         </div>
       </div>
@@ -1076,7 +291,6 @@
 
 <script>
   const island = document.getElementById('islandNav');
-  const filterButtons = document.querySelectorAll('[data-filter]');
   const themeCards = document.querySelectorAll('.theme-card');
   const detailsFloat = document.getElementById('detailsFloat');
   const detailsPanel = document.getElementById('detailsPanel');
@@ -1088,96 +302,95 @@
   const detailsIdeas = document.getElementById('detailsIdeas');
   const detailsMeta = document.getElementById('detailsMeta');
   const cursorGlow = document.getElementById('cursorGlow');
-
   const themeData = {
     cybersecurity: {
-      kicker: 'Senior / Junior',
-      title: 'Cybersecurity',
-      description: 'Protect systems, data, and users from digital threats with a solution that feels secure without becoming hard to use.',
-      badges: ['Threat detection', 'Secure sharing', 'Privacy tools'],
+      kicker: 'Placeholder',
+      title: 'Theme 1',
+      description: 'Description for theme 1 placeholder content goes here.',
+      badges: ['Placeholder tag', 'Placeholder tag', 'Placeholder tag'],
       meta: [
-        ['Focus', 'Security, trust, and responsible data handling'],
-        ['Best fit', 'Utility tools, alerts, dashboards, and workflows'],
-        ['Demo angle', 'Show how the system detects, warns, or protects']
+        ['Focus', 'Placeholder information for theme 1'],
+        ['Best fit', 'Placeholder information for theme 1'],
+        ['Demo angle', 'Placeholder information for theme 1']
       ],
       ideas: [
-        'AI-assisted phishing and threat detector',
-        'Secure student file-sharing dashboard'
+        'Placeholder idea one',
+        'Placeholder idea two'
       ]
     },
     healthtech: {
-      kicker: 'Senior / Junior',
-      title: 'HealthTech & Digital Wellbeing',
-      description: 'Tech that supports physical health, mental wellness, and healthier digital habits without feeling clinical or intimidating.',
-      badges: ['Wellness tracking', 'Habit support', 'Student care'],
+      kicker: 'Placeholder',
+      title: 'Theme 2',
+      description: 'Filler description for theme 2 placeholder content.',
+      badges: ['Placeholder tag', 'Placeholder tag', 'Placeholder tag'],
       meta: [
-        ['Focus', 'Healthy routines and personal support'],
-        ['Best fit', 'Companions, reminders, and habit systems'],
-        ['Demo angle', 'Show a clear daily workflow and visible progress']
+        ['Focus', 'Placeholder information for theme 2'],
+        ['Best fit', 'Placeholder information for theme 2'],
+        ['Demo angle', 'Placeholder information for theme 2']
       ],
       ideas: [
-        'Daily wellbeing companion with reflective check-ins',
-        'Smart reminder system for healthy screen breaks'
+        'Placeholder idea one',
+        'Placeholder idea two'
       ]
     },
     climate: {
-      kicker: 'Senior / Junior',
-      title: 'Environmental Monitoring & Climate Tech',
-      description: 'Build tools that help people understand the environment better and make more sustainable choices through data and automation.',
-      badges: ['Air quality', 'Climate data', 'Resource tracking'],
+      kicker: 'Placeholder',
+      title: 'Theme 3',
+      description: 'Filler description for theme 3 placeholder content.',
+      badges: ['Placeholder tag', 'Placeholder tag', 'Placeholder tag'],
       meta: [
-        ['Focus', 'Environmental awareness and measurable impact'],
-        ['Best fit', 'Dashboards, sensors, and automation ideas'],
-        ['Demo angle', 'Use live-looking data and clear visual summaries']
+        ['Focus', 'Placeholder information for theme 3'],
+        ['Best fit', 'Placeholder information for theme 3'],
+        ['Demo angle', 'Placeholder information for theme 3']
       ],
       ideas: [
-        'Local pollution dashboard with weather overlays',
-        'Resource-saving planner for school campuses'
+        'Placeholder idea one',
+        'Placeholder idea two'
       ]
     },
     robotics: {
-      kicker: 'Senior / Junior',
-      title: 'Robotics & Embedded Systems',
-      description: 'Connect hardware and software to create smart, responsive systems that react to the physical world around them.',
-      badges: ['Sensors', 'Automation', 'IoT systems'],
+      kicker: 'Placeholder',
+      title: 'Theme 4',
+      description: 'Filler description for theme 4 placeholder content.',
+      badges: ['Placeholder tag', 'Placeholder tag', 'Placeholder tag'],
       meta: [
-        ['Focus', 'Hardware-connected problem solving'],
-        ['Best fit', 'Sensors, microcontrollers, and control logic'],
-        ['Demo angle', 'Show input, response, and measurable action']
+        ['Focus', 'Placeholder information for theme 4'],
+        ['Best fit', 'Placeholder information for theme 4'],
+        ['Demo angle', 'Placeholder information for theme 4']
       ],
       ideas: [
-        'Sensor-based helper for classroom or lab safety',
-        'Smart automation dashboard for home or school'
+        'Placeholder idea one',
+        'Placeholder idea two'
       ]
     },
     accessibility: {
-      kicker: 'Senior / Junior',
-      title: 'Digital Accessibility & Assistive Technology',
-      description: 'Inclusive technology that helps people with disabilities interact, learn, and participate more independently.',
-      badges: ['Inclusive UI', 'Assistive tools', 'Voice support'],
+      kicker: 'Placeholder',
+      title: 'Theme 5',
+      description: 'Filler description for theme 5 placeholder content.',
+      badges: ['Placeholder tag', 'Placeholder tag', 'Placeholder tag'],
       meta: [
-        ['Focus', 'Accessibility and inclusive design'],
-        ['Best fit', 'Interfaces that remove friction for users'],
-        ['Demo angle', 'Show how your solution lowers barriers directly']
+        ['Focus', 'Placeholder information for theme 5'],
+        ['Best fit', 'Placeholder information for theme 5'],
+        ['Demo angle', 'Placeholder information for theme 5']
       ],
       ideas: [
-        'Accessibility-first navigation for low-vision users',
-        'Voice-guided study or campus assistant'
+        'Placeholder idea one',
+        'Placeholder idea two'
       ]
     },
     game: {
-      kicker: 'Junior only',
-      title: 'Game Development',
-      description: 'Build an interactive game with creative mechanics, strong gameplay, and a polished experience that feels complete.',
-      badges: ['Level design', 'Puzzle games', 'Arcade concepts'],
+      kicker: 'Placeholder',
+      title: 'Theme 6',
+      description: 'Filler description for theme 6 placeholder content.',
+      badges: ['Placeholder tag', 'Placeholder tag', 'Placeholder tag'],
       meta: [
-        ['Focus', 'Playability, polish, and pacing'],
-        ['Best fit', 'Narrative, puzzle, platform, or arcade games'],
-        ['Demo angle', 'Show the core loop, win condition, and controls']
+        ['Focus', 'Placeholder information for theme 6'],
+        ['Best fit', 'Placeholder information for theme 6'],
+        ['Demo angle', 'Placeholder information for theme 6']
       ],
       ideas: [
-        'Short narrative puzzle game with a clear win state',
-        'Physics-based arcade prototype with simple controls'
+        'Placeholder idea one',
+        'Placeholder idea two'
       ]
     }
   };
@@ -1226,22 +439,6 @@
     themeCards.forEach(card => card.classList.remove('is-active'));
   }
 
-  function applyFilter(filter){
-    themeCards.forEach(card => {
-      const tags = (card.getAttribute('data-tags') || '').split(' ');
-      const visible = filter === 'all' || tags.includes(filter);
-      card.classList.toggle('hidden', !visible);
-      card.classList.toggle('is-faded', false);
-      if (!visible) card.classList.remove('is-active');
-    });
-
-    themeCards.forEach(card => {
-      if (!card.classList.contains('hidden') && card.classList.contains('is-active')) {
-        card.style.zIndex = '15';
-      }
-    });
-  }
-
   if(island){
     island.addEventListener('click', (event) => {
       if(event.target.closest('a')) return;
@@ -1251,14 +448,6 @@
       if(!island.contains(event.target)) island.classList.remove('expanded');
     });
   }
-
-  filterButtons.forEach(button => {
-    button.addEventListener('click', () => {
-      filterButtons.forEach(item => item.classList.remove('active'));
-      button.classList.add('active');
-      applyFilter(button.dataset.filter);
-    });
-  });
 
   themeCards.forEach(card => {
     const openCard = () => {
@@ -1285,11 +474,28 @@
   });
 
   document.addEventListener('mousemove', (event) => {
-    cursorGlow.style.left = event.clientX + 'px';
-    cursorGlow.style.top = event.clientY + 'px';
+    cursorGlow.style.transform = `translate3d(${event.clientX}px, ${event.clientY}px, 0) translate(-50%,-50%)`;
   });
+  const sharkGlow = document.querySelector('.bg-shark-glow');
+let glowTicking = false;
 
-  applyFilter('all');
+function updateSharkGlow(){
+  const scrollY = window.scrollY || window.pageYOffset;
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  const progress = docHeight > 0 ? scrollY / docHeight : 0;
+  const x = (-30 + progress * 160).toFixed(1) + '%';
+  sharkGlow.style.setProperty('--glow-x', x);
+  glowTicking = false;
+}
+
+window.addEventListener('scroll', () => {
+  if(!glowTicking){
+    requestAnimationFrame(updateSharkGlow);
+    glowTicking = true;
+  }
+}, { passive:true });
+
+updateSharkGlow();
 </script>
 </body>
 </html>
