@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Resources — Placeholder</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resources — Placeholder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
 </head>
+
 <body>
   <div class="bg-logo"></div>
   <div class="bg-shark-glow"></div>
@@ -21,10 +25,12 @@
     <div class="island" id="islandNav">
       <a class="brand" href="Themes.html"><span class="dot"></span>CODEFEST_10</a>
       <div class="links">
-        <a href="Themes.html">themes</a>
-        <a href="EventDetails.html#schedule">schedule</a>
-        <a class="active" href="Resources.html">resources</a>
-        <a href="EventDetails.html#contact">contact</a>
+        <a href="Themes.html">Themes</a>
+        <a href="EventDetails.html">Event_Details</a>
+        <a class="active" href="Resources.html">Resources</a>
+        <a href="aboutus.html">About_Us</a>
+        <a href="register.html">Register</a>
+        <a href="#contact">Contact</a>
       </div>
     </div>
   </div>
@@ -34,7 +40,8 @@
       <div class="hero-copy">
         <div class="eyebrow">Resources Hub</div>
         <h1>Resource <span class="accent">Portal</span></h1>
-        <p class="page-sub">Placeholder resources page with a more technical, high-density layout. Replace the sample links and labels with your final materials when ready.</p>
+        <p class="page-sub">Placeholder resources page with a more technical, high-density layout. Replace the sample
+          links and labels with your final materials when ready.</p>
         <div class="hero-signals">
           <div class="signal-card">
             <span class="kicker">Library</span>
@@ -49,7 +56,8 @@
             <strong>Placeholder community space</strong>
           </div>
         </div>
-        <div class="page-note">This layout is intentionally neutral so all resource names, links, and descriptions can be filled in later.</div>
+        <div class="page-note">This layout is intentionally neutral so all resource names, links, and descriptions can
+          be filled in later.</div>
       </div>
     </div>
   </section>
@@ -60,7 +68,8 @@
         <article class="resource-card">
           <div class="eyebrow">Hackathon guide</div>
           <h3>Placeholder guide collection</h3>
-          <p>Use this area for the main materials that teams need during the event. The current content is intentionally generic placeholders only.</p>
+          <p>Use this area for the main materials that teams need during the event. The current content is intentionally
+            generic placeholders only.</p>
           <div class="resource-matrix">
             <a class="resource-link" href="#">
               <span class="kicker">Day 1</span>
@@ -104,7 +113,8 @@
         <article class="resource-card">
           <div class="eyebrow">Toolkit</div>
           <h4>Placeholder developer assets</h4>
-          <p>Use these slots for APIs, starter templates, sample datasets, design files, or any event-provided technical assets.</p>
+          <p>Use these slots for APIs, starter templates, sample datasets, design files, or any event-provided technical
+            assets.</p>
           <div class="grid-pills">
             <span class="meta-pill">Placeholder asset</span>
             <span class="meta-pill">Placeholder asset</span>
@@ -140,7 +150,8 @@
       <div class="resource-side">
         <article class="resource-summary">
           <div class="eyebrow">Access map</div>
-          <p>Placeholder text for where resource access instructions, folder structure, or publishing notes would go.</p>
+          <p>Placeholder text for where resource access instructions, folder structure, or publishing notes would go.
+          </p>
           <div class="resource-list">
             <div class="resource-item">
               <div class="label">
@@ -240,51 +251,85 @@
     </div>
   </section>
 
-  <footer class="footer">
-    <div class="wrap footer-inner">
-      <div>Placeholder footer text</div>
-      <div>Resources</div>
+<footer class="footer">
+  <div class="wrap footer-content">
+
+    <div class="footer-brand">
+      <h3>CODEFEST_10</h3>
+      <p>
+        Empowering innovation through technology, creativity,
+        and collaboration at Oakridge International School.
+      </p>
     </div>
-  </footer>
 
-<script>
-  const island = document.getElementById('islandNav');
-  const cursorGlow = document.getElementById('cursorGlow');
+    <div class="footer-links">
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="Themes.html">Themes</a></li>
+        <li><a href="EventDetails.html">Event Details</a></li>
+        <li><a href="Resources.html" class="active">Resources</a></li>
+        <li><a href="aboutus.html">About Us</a></li>
+        <li><a href="register.html">Register</a></li>
+      </ul>
+    </div>
 
-  if(island){
-    island.addEventListener('click', (event) => {
-      if(event.target.closest('a')) return;
-      island.classList.toggle('expanded');
-    });
-    document.addEventListener('click', (event) => {
-      if(!island.contains(event.target)) island.classList.remove('expanded');
-    });
-  }
+    <div class="footer-contact">
+      <h4>Contact</h4>
+      <p>Oakridge International School</p>
+      <p>Bengaluru, India</p>
+      <a href="mailto:codefest@oakridge.in">
+        codefest@oakridge.in
+      </a>
+    </div>
 
-  document.addEventListener('mousemove', (event) => {
-    cursorGlow.style.transform = `translate3d(${event.clientX}px, ${event.clientY}px, 0) translate(-50%,-50%)`;
-  });
+  </div>
 
-  const sharkGlow = document.querySelector('.bg-shark-glow');
-  let glowTicking = false;
+  <div class="wrap footer-bottom">
+    <p>© 2027 Oakridge Codefest. All Rights Reserved.</p>
+  </div>
+</footer>
 
-  function updateSharkGlow(){
-    const scrollY = window.scrollY || window.pageYOffset;
-    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-    const progress = docHeight > 0 ? scrollY / docHeight : 0;
-    const x = (-30 + progress * 160).toFixed(1) + '%';
-    sharkGlow.style.setProperty('--glow-x', x);
-    glowTicking = false;
-  }
+  <script>
+    const island = document.getElementById('islandNav');
+    const cursorGlow = document.getElementById('cursorGlow');
 
-  window.addEventListener('scroll', () => {
-    if(!glowTicking){
-      requestAnimationFrame(updateSharkGlow);
-      glowTicking = true;
+    if (island) {
+      island.addEventListener('click', (event) => {
+        if (event.target.closest('a')) return;
+        island.classList.toggle('expanded');
+      });
+      document.addEventListener('click', (event) => {
+        if (!island.contains(event.target)) island.classList.remove('expanded');
+      });
     }
-  }, { passive:true });
 
-  updateSharkGlow();
-</script>
+    document.addEventListener('mousemove', (event) => {
+      cursorGlow.style.transform = `translate3d(${event.clientX}px, ${event.clientY}px, 0) translate(-50%,-50%)`;
+    });
+
+    const sharkGlow = document.querySelector('.bg-shark-glow');
+    let glowTicking = false;
+
+    function updateSharkGlow() {
+      const scrollY = window.scrollY || window.pageYOffset;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = docHeight > 0 ? scrollY / docHeight : 0;
+      const x = (-30 + progress * 160).toFixed(1) + '%';
+      sharkGlow.style.setProperty('--glow-x', x);
+      glowTicking = false;
+    }
+
+    window.addEventListener('scroll', () => {
+      if (!glowTicking) {
+        requestAnimationFrame(updateSharkGlow);
+        glowTicking = true;
+      }
+    }, {
+      passive: true
+    });
+
+    updateSharkGlow();
+  </script>
 </body>
+
 </html>

@@ -17,24 +17,26 @@
 
 <body>
 
-    <div class="bg-grid"></div>
-    <div class="bg-noise"></div>
+    <div class="bg-logo"></div>
+  <div class="bg-shark-glow"></div>
+  <div class="bg-grid"></div>
+  <div class="bg-grid-2"></div>
+  <div class="bg-noise"></div>
+  <div class="cursor-glow" id="cursorGlow"></div>
 
-    <div class="island-wrap">
-        <div class="island" id="islandNav">
-            <div class="brand"><span class="dot"></span>CODEFEST_10</div>
-
-            <div class="links">
-                <a href="index.html">home</a>
-                <a href="about.html" class="active">about</a>
-                <a href="themes.html">themes</a>
-                <a href="register.html">register</a>
-                <a href="#faq">faq</a>
-            </div>
-
-            <a href="register.html" class="cta">register_now()</a>
-        </div>
+  <div class="topbar-wrap">
+    <div class="island" id="islandNav">
+      <a class="brand" href="   Themes.html"><span class="dot"></span>CODEFEST_10</a>
+      <div class="links">
+        <a href="Themes.html">Themes</a>
+        <a href="EventDetails.html">Event Details</a>
+        <a href="Resources.html">Resources</a>
+        <a class="active" href="aboutus.html">About Us</a>
+        <a href="register.html">Register</a>
+        <a href="#contact">Contact</a>
+      </div>
     </div>
+  </div>
 
     <header class="about-hero">
         <div class="wrap">
@@ -210,24 +212,85 @@
         </div>
     </section>
 
-    <footer>
-        <div class="wrap footer-bottom">
+<footer class="footer">
+  <div class="wrap footer-content">
 
-            <div>
-                © 2026 Oakridge International School — CODEFEST_10
-            </div>
+    <div class="footer-brand">
+      <h3>CODEFEST_10</h3>
+      <p>
+        Empowering innovation through technology, creativity,
+        and collaboration at Oakridge International School.
+      </p>
+    </div>
 
-            <div class="footer-socials">
-                <a href="#">Instagram</a>
-                <a href="#">LinkedIn</a>
-                <a href="#">YouTube</a>
-            </div>
+    <div class="footer-links">
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="Themes.html">Themes</a></li>
+        <li><a href="EventDetails.html">Event Details</a></li>
+        <li><a href="Resources.html">Resources</a></li>
+        <li><a href="aboutus.html" class="active">About Us</a></li>
+        <li><a href="register.html">Register</a></li>
+      </ul>
+    </div>
 
-        </div>
-    </footer>
+    <div class="footer-contact">
+      <h4>Contact</h4>
+      <p>Oakridge International School</p>
+      <p>Bengaluru, India</p>
+      <a href="mailto:codefest@oakridge.in">
+        codefest@oakridge.in
+      </a>
+    </div>
 
-    <script src="js/main.js"></script>
-    <script src="js/about.js"></script>
+  </div>
+
+  <div class="wrap footer-bottom">
+    <p>© 2027 Oakridge Codefest. All Rights Reserved.</p>
+  </div>
+</footer>
+
+<script>
+    const island = document.getElementById('islandNav');
+    const cursorGlow = document.getElementById('cursorGlow');
+
+    if (island) {
+      island.addEventListener('click', (event) => {
+        if (event.target.closest('a')) return;
+        island.classList.toggle('expanded');
+      });
+      document.addEventListener('click', (event) => {
+        if (!island.contains(event.target)) island.classList.remove('expanded');
+      });
+    }
+
+    document.addEventListener('mousemove', (event) => {
+      cursorGlow.style.transform = `translate3d(${event.clientX}px, ${event.clientY}px, 0) translate(-50%,-50%)`;
+    });
+
+    const sharkGlow = document.querySelector('.bg-shark-glow');
+    let glowTicking = false;
+
+    function updateSharkGlow() {
+      const scrollY = window.scrollY || window.pageYOffset;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = docHeight > 0 ? scrollY / docHeight : 0;
+      const x = (-30 + progress * 160).toFixed(1) + '%';
+      sharkGlow.style.setProperty('--glow-x', x);
+      glowTicking = false;
+    }
+
+    window.addEventListener('scroll', () => {
+      if (!glowTicking) {
+        requestAnimationFrame(updateSharkGlow);
+        glowTicking = true;
+      }
+    }, {
+      passive: true
+    });
+
+    updateSharkGlow();
+  </script>
 
 
 
