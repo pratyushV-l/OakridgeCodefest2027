@@ -28,7 +28,12 @@ jobs:
         working-directory: CF2027
         run: npx astro build
 
+      - name: Skip mirror when token is unavailable
+        if: ${{ secrets.CF2026_PAT == '' }}
+        run: echo "CF2026_PAT is not configured; skipping mirror sync."
+
       - name: Checkout destination
+        if: ${{ secrets.CF2026_PAT != '' }}
         uses: actions/checkout@v4
         with:
           repository: LearnPRG-py/OakCodefest-2026
@@ -37,26 +42,31 @@ jobs:
           fetch-depth: 1
 
       - name: Preserve CNAME
+        if: ${{ secrets.CF2026_PAT != '' }}
         run: |
           if [ -f CF2026/CNAME ]; then
             cp CF2026/CNAME /tmp/CNAME
           fi
 
       - name: Wipe destination working tree
+        if: ${{ secrets.CF2026_PAT != '' }}
         run: |
           find CF2026 -mindepth 1 -maxdepth 1 ! -name '.git' -exec rm -rf {} +
 
       - name: Copy source contents into destination
+        if: ${{ secrets.CF2026_PAT != '' }}
         run: |
           rsync -a --exclude='.git' CF2027/ CF2026/
 
       - name: Restore CNAME
+        if: ${{ secrets.CF2026_PAT != '' }}
         run: |
           if [ -f /tmp/CNAME ]; then
             cp /tmp/CNAME CF2026/CNAME
           fi
 
       - name: Commit and push to CF2026
+        if: ${{ secrets.CF2026_PAT != '' }}
         working-directory: CF2026
         env:
           GIT_AUTHOR_NAME: github-actions[bot]
